@@ -12,10 +12,15 @@ setup(
     author_email='gigaqeeq@gmail.com',
     description="Browsers options",
     long_description=long_description,
-    version='0.1',
+    version='0.3',
     license='AGPL-3.0',
     url='https://github.com/qeeqbox/galeodes',
     packages=['galeodes'],
     scripts=['galeodes/galeodes'],
-    python_requires='>=3'
+    install_requires=[
+        'selenium',
+        'requests',
+        'Pillow'
+    ],
+    python_requires='>=3.5'
 )

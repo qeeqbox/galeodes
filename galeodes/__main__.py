@@ -16,7 +16,7 @@ def main_logic():
 	ARGV = ARG_PARSER.parse_args()
 	if ARGV.driver:
 		if ARGV.driver == "chrome" or ARGV.driver == "firefox":
-			print(Galeodes(ARGV.driver).get_driver())
+			print(Galeodes(browser=ARGV.driver).get_driver())
 
 if __name__ == '__main__':
     main_logic()
