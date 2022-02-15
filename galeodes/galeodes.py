@@ -10,8 +10,9 @@ from itertools import repeat, islice
 from concurrent.futures import ThreadPoolExecutor, as_completed, wait, ALL_COMPLETED, TimeoutError, wait
 from PIL import Image
 from io import BytesIO
-from logging import getLogger, DEBUG, basicConfig
+from logging import getLogger, DEBUG, Formatter, StreamHandler
 from stat import ST_MODE
+from sys import stdout
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as chromeservice
 from selenium.webdriver.chrome.options import Options as chromeoptions
@@ -27,9 +28,14 @@ class Galeodes():
 		self.options = kwargs.get('options', None)
 		self.implicit_wait = kwargs.get('implicit_wait', 1)
 		self.verbose = kwargs.get('verbose', None)
-		basicConfig()
-		self.log = getLogger('galeodes')
-		self.log.setLevel(DEBUG)
+		self.log = None
+		if self.verbose:
+			self.log = getLogger('galeodes')
+			self.log.setLevel(DEBUG)
+			sys_out_handler = StreamHandler(stdout)
+			sys_out_handler.setLevel(DEBUG)
+			sys_out_handler.setFormatter(Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+			self.log.addHandler(sys_out_handler)
 		Path(self.location).mkdir(parents=True, exist_ok=True)
 		temp_chrome = path.join(path.dirname(path.realpath(__file__)),"drivers","chromedriver")
 		temp_firefox = path.join(path.dirname(path.realpath(__file__)),"drivers","geckodriver")

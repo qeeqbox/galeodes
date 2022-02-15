@@ -12,7 +12,7 @@ setup(
     author_email='gigaqeeq@gmail.com',
     description="Browsers options",
     long_description=long_description,
-    version='0.3',
+    version='0.4',
     license='AGPL-3.0',
     url='https://github.com/qeeqbox/galeodes',
     packages=['galeodes'],
