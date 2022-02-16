@@ -16,11 +16,15 @@ setup(
     license='AGPL-3.0',
     url='https://github.com/qeeqbox/galeodes',
     packages=['galeodes'],
-    scripts=['galeodes/galeodes'],
     install_requires=[
         'selenium',
         'requests',
         'Pillow'
     ],
-    python_requires='>=3.5'
+    python_requires='>=3.5',
+    entry_points={
+        "console_scripts": [
+            'galeodes=galeodes.__main__:main_logic'
+        ]
+    }
 )
