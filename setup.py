@@ -14,6 +14,7 @@ setup(
     long_description=long_description,
     version='0.6',
     license='AGPL-3.0',
+    license_files = ('LICENSE'),
     url='https://github.com/qeeqbox/galeodes',
     packages=['galeodes'],
     scripts=['galeodes/galeodes'],
