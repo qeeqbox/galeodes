@@ -26,7 +26,7 @@ class Galeodes():
 		self.full_path = {}
 		self.arguments = kwargs.get('arguments', None)
 		self.options = kwargs.get('options', None)
-		self.implicit_wait = kwargs.get('implicit_wait', 1)
+		self.implicit_wait = kwargs.get('implicit_wait', 5)
 		self.verbose = kwargs.get('verbose', None)
 		self.log = None
 		if self.verbose:
@@ -120,6 +120,7 @@ class Galeodes():
 							web_options.add_argument(argument)
 					service = chromeservice(self.full_path["chromedriver"])
 					driver = webdriver.Chrome(service=service, options=web_options)
+					driver.set_page_load_timeout(self.implicit_wait)
 			if self.browser != None and self.full_path:
 				if self.browser == "firefox" and "geckodriver" in self.full_path:
 					web_options= firefoxoptions()
@@ -131,6 +132,7 @@ class Galeodes():
 							web_options.add_argument(argument)
 					service = firefoxservice(self.full_path["geckodriver"])
 					driver = webdriver.Firefox(service=service, options=web_options)
+					driver.set_page_load_timeout(self.implicit_wait)
 		return driver
 
 	def get_page(self,driver,urls,kwargs):
@@ -167,7 +169,8 @@ class Galeodes():
 			if kwargs.get('number_of_workers', 1) > 1:
 				kwargs['urls'] = [kwargs['urls'][i:i + kwargs.get('number_of_workers', 1)] for i in range(0, len(kwargs['urls']), kwargs.get('number_of_workers', 1))]
 			drivers = [self.setup_driver() for _ in range(len(kwargs['urls']))]
-			with ThreadPoolExecutor(max_workers=kwargs.get('number_of_workers', 1)) as executor:
+			self.verbose and self.log.info("Number of workers {}".format(len(kwargs['urls'])))
+			with ThreadPoolExecutor(max_workers=len(kwargs['urls'])) as executor:
 				with suppress(Exception):
 					future_fetch_url =[]
 					results = []
@@ -175,7 +178,7 @@ class Galeodes():
 					for _ in range(len(kwargs['urls'])):
 						if drivers[_] != None:
 							future_fetch_url.append(executor.submit(self.get_page,drivers[_],kwargs['urls'][_],kwargs))
-						future_fetch_url, _ = wait(future_fetch_url,timeout=60)
+					future_fetch_url, _ = wait(future_fetch_url,timeout=60)
 					for future in future_fetch_url:
 						results.extend(future.result())
 			for driver in drivers:
